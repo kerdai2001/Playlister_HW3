@@ -1,4 +1,4 @@
-import EditToolbar from "./EditToolbar";
+
 /*
     Our Application's Banner, note we are using function-style
     React. Our banner just has a left-aligned heading and a
@@ -10,7 +10,7 @@ function Banner(props) {
     return (        
         <div id="playlister-banner">
             Playlister
-            <EditToolbar />
+            
         </div>
     );
 }
