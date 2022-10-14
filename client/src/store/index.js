@@ -60,10 +60,10 @@ export const useGlobalStore = () => {
             // CREATE A NEW LIST
             case GlobalStoreActionType.CREATE_NEW_LIST: {
                 return setStore({
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
+                    idNamePairs: payload.idNamePairs,
+                    currentList: payload.playlist,
                     newListCounter: store.newListCounter + 1,
-                    listNameActive: false
+                    listNameActive: true
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -202,6 +202,32 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    // create new list
+    store.createNewList = function() {
+        async function asyncCreateNewList() {
+            let response = await api.createPlaylist({name: "Untitled " + (store.idNamePairs.length + 1), songs: []});
+            if (response.data.success) {
+                let newPlaylist = response.data.playlist;
+                async function getListPairs() {
+                    response = await api.getPlaylistPairs();
+                    if (response.data.success) {
+                        let pairsArray = response.data.idNamePairs;
+                        storeReducer({
+                            type: GlobalStoreActionType.CREATE_NEW_LIST,
+                            payload: {
+                                idNamePairs: pairsArray,
+                                playlist: newPlaylist
+                            }
+                        });
+                        store.setCurrentList(newPlaylist._id);
+                    }
+                }
+                getListPairs();
+            }
+        }
+        asyncCreateNewList();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

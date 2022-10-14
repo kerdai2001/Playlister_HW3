@@ -18,7 +18,7 @@ createPlaylist = (req, res) => {
     }
 
     const playlist = new Playlist(body);
-    console.log("playlist: " + JSON.stringify(body));
+    //console.log("playlist: " + JSON.stringify(body));
     if (!playlist) {
         return res.status(400).json({ success: false, error: err })
     }
