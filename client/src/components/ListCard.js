@@ -37,6 +37,7 @@ function ListCard(props) {
             store.setListNameActive();
         }
         setEditActive(newActive);
+        setText(idNamePair.name);
     }
 
     function handleKeyPress(event) {
