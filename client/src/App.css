@@ -6,11 +6,11 @@
     
         @author McKilla Gorilla
     */
-  --swatch-foundation: #eeeedd; 
-  --swatch-primary: #e6e6e6; 
-  --swatch-complement: #e1e4cb;
+  --swatch-foundation: #fff6fa; 
+  --swatch-primary: #fff3fa; 
+  --swatch-complement: #ffdce9;
   --swatch-contrast: #111111; 
-  --swatch-accent: #669966; 
+  --swatch-accent: #ffdce9; 
   --swatch-status: #123456;
   --my-font-family: "Robaaaoto";
   --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
@@ -18,6 +18,8 @@
 
 body {
   background-color: var(--swatch-foundation);
+  background-image: url(bg.jpg);
+  background-size: cover;
 }
 
 #root {
@@ -48,8 +50,8 @@ body {
   grid-row: 1 / 2;
   text-align:center;
   background-image: linear-gradient(to bottom,         
-  #b8b808, #636723);
-  color: white;
+  #ffe6e5, #feb1c0);
+  color: #9a243e;
   font-size: 48pt;
   border-color: black;
   border-width: 2px;
@@ -97,7 +99,6 @@ body {
   border-color: black;
   border-style: solid;
   border-radius: 5px;
-  float:left;
   color: black;
   cursor: pointer;
   opacity: 100%;
@@ -119,7 +120,7 @@ body {
   top: 90%;
   width: 100%;
   height: 10%;
-  background-color: lightsalmon;
+  background-color: #ffa9cf;
   display:flex;
   align-items: center;
   justify-content: center;
