@@ -259,6 +259,13 @@ export const useGlobalStore = () => {
         asyncShowDeleteListModal(id);
     }
 
+    // close delete list modal
+    store.hideDeleteListModal = (event) => {
+        event.stopPropagation();
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
+    }
+
     // confirm delete list
     store.deleteList = (event) => {
         event.stopPropagation();
@@ -283,12 +290,18 @@ export const useGlobalStore = () => {
         asyncDeleteList(id);
     }
 
-    // close delete list modal
-    store.hideDeleteListModal = (event) => {
+    // add new song
+    store.addNewSong = (event) => {
         event.stopPropagation();
-        let modal = document.getElementById("delete-list-modal");
-        modal.classList.remove("is-visible");
+        let song = {
+            title: "Untitled",
+            artist: "Unknown",
+            youTubeId: "dQw4w9WgXcQ",
+        };
+        store.currentList.songs.push(song);
     }
+
+
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
