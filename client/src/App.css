@@ -120,11 +120,12 @@ body {
   top: 90%;
   width: 100%;
   height: 10%;
-  background-color: #ffa9cf;
+  background-color: #bf4c66;
   display:flex;
   align-items: center;
   justify-content: center;
   font-size: 36pt;
+  color: white;
 }
 
 #add-list-button {
@@ -206,35 +207,46 @@ input {
 
 .modal-dialog {
   position: relative;
-  max-width: 800px;
-  max-height: 80vh;
+  max-width: 1200vw;
+  max-height: 600vh;
   background: var(--swatch-complement);
-  overflow: auto;
+  overflow: visible;
   cursor: default;
   border-width: 5px;
-  border-radius: 10px;
-  border-style: groove;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-dialog > * {
   padding: 1rem;
 }
 
+.modal-center {
+  display: grid;
+  gap: 10px 20px;
+  font-size: 48pt;
+}
+
 .modal-header,
 .modal-footer {
   background: var(--lightgray);
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-header {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: dotted;
+  background-color: #bf4c66;
+  font-weight: bold;
+  color:white;
 }
 
 .modal-header,
 .modal-close {
-  font-size: 1.5rem;
+  font-size: 32pt;
 }
 
 .modal p + p {

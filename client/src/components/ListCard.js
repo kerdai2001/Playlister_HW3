@@ -76,6 +76,7 @@ function ListCard(props) {
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
+                onClick={store.showDeleteListModal}
                 value={"\u{1F5D1}"}
             />
             <input
