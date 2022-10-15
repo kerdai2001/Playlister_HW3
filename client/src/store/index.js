@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 
@@ -506,6 +506,20 @@ export const useGlobalStore = () => {
     store.canRedo = function() {
         return tps.hasTransactionToRedo();
     }
+
+    function KeyPress(event) {
+        if(event.ctrlKey && !store.modalOpen)
+        {
+            if(event.key === "z" && store.canUndo) {
+                store.undo();
+            }
+            else if(event.key === 'y' && store.canRedo) {
+                store.redo();
+            }
+        }
+    }
+
+    document.onkeydown = (e) => KeyPress(e);
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

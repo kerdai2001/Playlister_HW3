@@ -21,10 +21,14 @@ function EditToolbar() {
         history.push("/");
         store.closeCurrentList();
     }
+
+    /*
     let editStatus = false;
     if (store.isListNameEditActive) {
         editStatus = true;
     }
+    */
+   
     return (
         <span id="edit-toolbar">
             <input

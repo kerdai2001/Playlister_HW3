@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
@@ -26,7 +26,7 @@ function SongCard(props) {
     let handleDrop = (event) => {
         let moveStartIndex = event.dataTransfer.getData("song");
         let moveEndIndex = event.target.id.substring("song-".length, event.target.id.length - "-card".length);
-        if(moveStartIndex != moveEndIndex)
+        if(moveStartIndex !== moveEndIndex)
             store.addMoveSongTransaction(moveStartIndex, moveEndIndex);
     }
 
