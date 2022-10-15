@@ -2,6 +2,8 @@ import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 
+import AddSong_Transaction from '../transactions/AddSong_Transaction';
+
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -155,6 +157,7 @@ export const useGlobalStore = () => {
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
+        tps.clearAllTransactions();
         storeReducer({
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
@@ -290,18 +293,45 @@ export const useGlobalStore = () => {
         asyncDeleteList(id);
     }
 
-    // add new song
-    store.addNewSong = (event) => {
-        event.stopPropagation();
+    store.addNewSong = function() {
+        let playlist = store.currentList;
         let song = {
             title: "Untitled",
             artist: "Unknown",
             youTubeId: "dQw4w9WgXcQ",
         };
-        store.currentList.songs.push(song);
+        playlist.songs.push(song);
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                });
+            }
+        }
+        updateList(playlist);
     }
 
+    store.removeNewSong = function() {
+        let playlist = store.currentList;
+        playlist.songs.pop();
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                });
+            }
+        }
+        updateList(playlist);
+    }
 
+    store.addAddNewSongTransaction = function() {
+        let transaction = new AddSong_Transaction(store);
+        tps.addTransaction(transaction);
+    }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

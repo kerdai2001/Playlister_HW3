@@ -213,7 +213,7 @@ input {
   background: var(--swatch-complement);
   overflow: visible;
   cursor: default;
-  border-width: 5px;
+  border-width: 3px;
   border-style: solid;
   display: flex;
   flex-direction: column;
