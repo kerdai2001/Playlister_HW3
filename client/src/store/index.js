@@ -3,6 +3,7 @@ import jsTPS from '../common/jsTPS'
 import api from '../api'
 
 import AddSong_Transaction from '../transactions/AddSong_Transaction';
+import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction';
 
 export const GlobalStoreContext = createContext({});
 /*
@@ -21,7 +22,8 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION"
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -36,7 +38,8 @@ export const useGlobalStore = () => {
         currentList: null,
         newListCounter: 0,
         listNameActive: false,
-        selectedList: null
+        selectedList: null,
+        songIndex: null
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -51,7 +54,8 @@ export const useGlobalStore = () => {
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    selectedList: store.selectedList
+                    selectedList: store.selectedList,
+                    songIndex: null
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -61,7 +65,8 @@ export const useGlobalStore = () => {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    selectedList: store.selectedList
+                    selectedList: store.selectedList,
+                    songIndex: null
                 })
             }
             // CREATE A NEW LIST
@@ -71,7 +76,8 @@ export const useGlobalStore = () => {
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter + 1,
                     listNameActive: true,
-                    selectedList: store.selectedList
+                    selectedList: store.selectedList,
+                    songIndex: null
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -81,7 +87,8 @@ export const useGlobalStore = () => {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    selectedList: store.selectedList
+                    selectedList: store.selectedList,
+                    songIndex: null
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -91,9 +98,22 @@ export const useGlobalStore = () => {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    selectedList: payload
+                    selectedList: payload,
+                    songIndex: null
                 });
             }
+
+            case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    selectedList: store.selectedList,
+                    songIndex: payload
+                });
+            }
+
             // UPDATE A LIST
             case GlobalStoreActionType.SET_CURRENT_LIST: {
                 return setStore({
@@ -293,6 +313,22 @@ export const useGlobalStore = () => {
         asyncDeleteList(id);
     }
 
+    store.showRemoveSongModal = (event) => {
+        event.stopPropagation();
+        let index = event.target.id.substring("remove-song-".length);
+        let modal = document.getElementById("remove-song-modal");
+        modal.classList.add("is-visible");
+        storeReducer({
+            type: GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+            payload: index
+        });
+    }
+
+    store.hideRemoveSongModal = () => {
+        let modal = document.getElementById("remove-song-modal");
+        modal.classList.remove("is-visible");
+    }
+
     store.addNewSong = function() {
         let playlist = store.currentList;
         let song = {
@@ -328,9 +364,45 @@ export const useGlobalStore = () => {
         updateList(playlist);
     }
 
+    store.removeSong = function(index) {
+        let playlist = store.currentList;
+        playlist.songs.splice(index, 1);
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                });
+            }
+        }
+        updateList(playlist);
+    }
+
+    store.addSong = function(index, song) {
+        let playlist = store.currentList;
+        playlist.songs.splice(index, 0, song);
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                });
+            }
+        }
+        updateList(playlist);
+    }
+
     store.addAddNewSongTransaction = function() {
         let transaction = new AddSong_Transaction(store);
         tps.addTransaction(transaction);
+    }
+
+    store.addRemoveSongTransaction = function() {
+        let transaction = new RemoveSong_Transaction(store, store.songIndex, store.currentList.songs[store.songIndex]);
+        tps.addTransaction(transaction);
+        store.hideRemoveSongModal();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

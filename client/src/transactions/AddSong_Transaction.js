@@ -1,4 +1,4 @@
-import { jsTPS_Transaction } from "../common/jsTPS";
+import jsTPS_Transaction from "../common/jsTPS.js"
 
 export default class AddSong_Transaction extends jsTPS_Transaction {
     constructor(store) {
