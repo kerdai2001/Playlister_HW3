@@ -5,6 +5,7 @@ import api from '../api'
 import AddSong_Transaction from '../transactions/AddSong_Transaction';
 import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction';
 import EditSong_Transaction from '../transactions/EditSong_Transaction';
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction';
 
 export const GlobalStoreContext = createContext({});
 /*
@@ -431,6 +432,23 @@ export const useGlobalStore = () => {
         updateList(playlist);
     }
 
+    store.moveSong = function(start, end) {
+        let playlist = store.currentList;
+        let temp = playlist.songs[end];
+        playlist.songs[end] = playlist.songs[start];
+        playlist.songs[start] = temp;
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                });
+            }
+        }
+        updateList(playlist);
+    }
+
     store.addAddNewSongTransaction = function() {
         let transaction = new AddSong_Transaction(store);
         tps.addTransaction(transaction);
@@ -447,13 +465,18 @@ export const useGlobalStore = () => {
 
         let title = document.getElementById("song-title").value;
         let artist = document.getElementById("song-artist").value;
-        let id = document.getElementById("song-id").value;
+        let youTubeId = document.getElementById("song-id").value;
 
-        let newSong = { title, artist, id }
+        let newSong = { title, artist, youTubeId }
 
         let transaction = new EditSong_Transaction(store, store.songIndex, oldSong, newSong);
         tps.addTransaction(transaction);
         store.hideEditSongModal();
+    }
+
+    store.addMoveSongTransaction = function(start, end) {
+        let transaction = new MoveSong_Transaction(store, start, end);
+        tps.addTransaction(transaction);
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

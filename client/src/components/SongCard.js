@@ -2,16 +2,47 @@ import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
+
     const { store } = useContext(GlobalStoreContext);
 
     const { song, index } = props;
+
     let cardClass = "list-card unselected-list-card";
+
+    let handleDragStart = (event) => {
+        let moveStartIndex = event.target.id.substring("song-".length, event.target.id.length - "-card".length);
+        event.dataTransfer.setData("song", moveStartIndex);
+        event.target.className += " is-dragging";
+    }
+
+    let handleIgnore = (event) => {
+        event.preventDefault();
+    }
+
+    let handleDragEnd = (event) => {
+        event.target.className = "list-card unselected-list-card";
+    }
+
+    let handleDrop = (event) => {
+        let moveStartIndex = event.dataTransfer.getData("song");
+        let moveEndIndex = event.target.id.substring("song-".length, event.target.id.length - "-card".length);
+        if(moveStartIndex != moveEndIndex)
+            store.addMoveSongTransaction(moveStartIndex, moveEndIndex);
+    }
+
     return (
         <div
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
             onDoubleClick={store.showEditSongModal}
+            onDragStart={handleDragStart}
+            onDragOver={handleIgnore}
+            onDragEnter={handleIgnore}
+            onDragLeave={handleIgnore}
+            onDragEnd={handleDragEnd}
+            onDrop={handleDrop}
+            draggable="true"
         >
             {index + 1}.{" "}
             <a
