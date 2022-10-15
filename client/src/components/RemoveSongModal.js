@@ -5,7 +5,7 @@ const RemoveSongModal = () => {
     const { store } = useContext(GlobalStoreContext);
     let name = "";
 
-    if (store.songIndex) {
+    if (store.songIndex && store.currentList.songs[store.songIndex]) {
         name = store.currentList.songs[store.songIndex].title;
     }
 

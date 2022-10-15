@@ -5,6 +5,7 @@ import { Banner, ListSelector, PlaylistCards, Statusbar } from './components'
 
 import DeleteListModal from './components/DeleteListModal';
 import RemoveSongModal from './components/RemoveSongModal';
+import EditSongModal from './components/EditSongModal';
 /*
     This is our application's top-level component.
     
@@ -21,6 +22,7 @@ const App = () => {
             <Statusbar />
             <DeleteListModal />
             <RemoveSongModal />
+            <EditSongModal />
         </Router>
     )
 }

@@ -11,6 +11,7 @@ function SongCard(props) {
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
+            onDoubleClick={store.showEditSongModal}
         >
             {index + 1}.{" "}
             <a
