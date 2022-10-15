@@ -11,8 +11,6 @@ function EditToolbar() {
     const { store } = useContext(GlobalStoreContext);
     const history = useHistory();
 
-    let enabledButtonClass = "playlister-button";
-
     function handleUndo() {
         store.undo();
     }
@@ -32,33 +30,33 @@ function EditToolbar() {
             <input
                 type="button"
                 id='add-song-button'
-                disabled={editStatus}
+                disabled={store.modalOpen || !store.currentList}
                 value="+"
-                className={enabledButtonClass}
+                className="playlister-button"
                 onClick={store.addAddNewSongTransaction}
             />
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={store.modalOpen || !store.canUndo()}
                 value="⟲"
-                className={enabledButtonClass}
+                className="playlister-button"
                 onClick={handleUndo}
             />
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={store.modalOpen || !store.canRedo()}
                 value="⟳"
-                className={enabledButtonClass}
+                className="playlister-button"
                 onClick={handleRedo}
             />
             <input
                 type="button"
                 id='close-button'
-                disabled={editStatus}
+                disabled={store.modalOpen || !store.currentList}
                 value="&#x2715;"
-                className={enabledButtonClass}
+                className="playlister-button"
                 onClick={handleClose}
             />
         </span>);

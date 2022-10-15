@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 
@@ -41,7 +41,8 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         selectedList: null,
-        songIndex: null
+        songIndex: null,
+        modalOpen: false
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -57,7 +58,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     selectedList: store.selectedList,
-                    songIndex: null
+                    songIndex: null,
+                    modalOpen: false
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -68,7 +70,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     selectedList: store.selectedList,
-                    songIndex: null
+                    songIndex: null,
+                    modalOpen: false
                 })
             }
             // CREATE A NEW LIST
@@ -79,7 +82,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter + 1,
                     listNameActive: true,
                     selectedList: store.selectedList,
-                    songIndex: null
+                    songIndex: null,
+                    modalOpen: false
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -90,7 +94,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     selectedList: store.selectedList,
-                    songIndex: null
+                    songIndex: null,
+                    modalOpen: false
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -101,7 +106,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     selectedList: payload,
-                    songIndex: null
+                    songIndex: null,
+                    modalOpen: true
                 });
             }
 
@@ -112,7 +118,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     selectedList: store.selectedList,
-                    songIndex: payload
+                    songIndex: payload,
+                    modalOpen: true
                 });
             }
 
@@ -123,7 +130,8 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    selectedList: store.selectedList
+                    selectedList: store.selectedList,
+                    modalOpen: false
                 });
             }
             // START EDITING A LIST NAME
@@ -133,7 +141,8 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listNameActive: true,
-                    selectedList: store.selectedList
+                    selectedList: store.selectedList,
+                    modalOpen: false
                 });
             }
             default:
@@ -289,6 +298,10 @@ export const useGlobalStore = () => {
         event.stopPropagation();
         let modal = document.getElementById("delete-list-modal");
         modal.classList.remove("is-visible");
+        storeReducer({
+            type: GlobalStoreActionType.SET_CURRENT_LIST,
+            payload: store.currentList
+        });
     }
 
     // confirm delete list
@@ -314,7 +327,6 @@ export const useGlobalStore = () => {
         }
         asyncDeleteList(id);
     }
-
     store.showRemoveSongModal = (event) => {
         event.stopPropagation();
         let index = event.target.id.substring("remove-song-".length);
@@ -329,6 +341,10 @@ export const useGlobalStore = () => {
     store.hideRemoveSongModal = () => {
         let modal = document.getElementById("remove-song-modal");
         modal.classList.remove("is-visible");
+        storeReducer({
+            type: GlobalStoreActionType.SET_CURRENT_LIST,
+            payload: store.currentList
+        });
     }
 
     store.showEditSongModal = (event) => {
@@ -350,6 +366,10 @@ export const useGlobalStore = () => {
     store.hideEditSongModal = () => {
         let modal = document.getElementById("edit-song-modal");
         modal.classList.remove("is-visible");
+        storeReducer({
+            type: GlobalStoreActionType.SET_CURRENT_LIST,
+            payload: store.currentList
+        });
     }
 
     store.addNewSong = function() {
@@ -477,6 +497,14 @@ export const useGlobalStore = () => {
     store.addMoveSongTransaction = function(start, end) {
         let transaction = new MoveSong_Transaction(store, start, end);
         tps.addTransaction(transaction);
+    }
+
+    store.canUndo = function() {
+        return tps.hasTransactionToUndo();
+    }
+
+    store.canRedo = function() {
+        return tps.hasTransactionToRedo();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

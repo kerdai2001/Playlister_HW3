@@ -33,15 +33,16 @@ const ListSelector = () => {
     return (
         <div id="playlist-selector">
             <div id="playlist-selector-heading">
-                    <input
-                        type="button"
-                        id="add-list-button"
-                        onClick={handleCreateNewList}
-                        className="playlister-button"
-                        value="+" />
-                    Your Playlists
-                    <EditToolbar />
-                </div>
+                <input
+                    type="button"
+                    id="add-list-button"
+                    onClick={handleCreateNewList}
+                    className="playlister-button"
+                    value="+"
+                    disabled={store.modalOpen} />
+                Your Playlists
+                <EditToolbar />
+            </div>
             <div id="list-selector-list">
                 { listCard }
             </div>

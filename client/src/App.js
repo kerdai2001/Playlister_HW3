@@ -1,7 +1,7 @@
 import './App.css';
 import { React } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { Banner, ListSelector, PlaylistCards, Statusbar } from './components'
+import { Banner, EditToolbar, ListSelector, PlaylistCards, Statusbar } from './components'
 
 import DeleteListModal from './components/DeleteListModal';
 import RemoveSongModal from './components/RemoveSongModal';

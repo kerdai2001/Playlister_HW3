@@ -28,7 +28,8 @@ function PlaylistCards() {
                     id="add-list-button"
                     onClick={ListSelector.handleCreateNewList}
                     className="playlister-button"
-                    value="+" />
+                    value="+"
+                    disabled={true} />
                 Your Playlists
                 <EditToolbar />
             </div>
