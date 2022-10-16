@@ -11,12 +11,6 @@ function EditToolbar() {
     const { store } = useContext(GlobalStoreContext);
     const history = useHistory();
 
-    function handleUndo() {
-        store.undo();
-    }
-    function handleRedo() {
-        store.redo();
-    }
     function handleClose() {
         history.push("/");
         store.closeCurrentList();
@@ -28,7 +22,7 @@ function EditToolbar() {
         editStatus = true;
     }
     */
-   
+
     return (
         <span id="edit-toolbar">
             <input
@@ -45,7 +39,7 @@ function EditToolbar() {
                 disabled={store.modalOpen || !store.canUndo()}
                 value="⟲"
                 className="playlister-button"
-                onClick={handleUndo}
+                onClick={store.undo}
             />
             <input
                 type="button"
@@ -53,7 +47,7 @@ function EditToolbar() {
                 disabled={store.modalOpen || !store.canRedo()}
                 value="⟳"
                 className="playlister-button"
-                onClick={handleRedo}
+                onClick={store.redo}
             />
             <input
                 type="button"
