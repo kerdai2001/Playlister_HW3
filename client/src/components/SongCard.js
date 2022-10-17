@@ -10,6 +10,9 @@ function SongCard(props) {
     let cardClass = "list-card unselected-list-card";
 
     let handleDragStart = (event) => {
+        if(!event.target.classList.contains("list-card"))
+            event.target = event.target.parentNode;
+
         let moveStartIndex = event.target.id.substring("song-".length, event.target.id.length - "-card".length);
         event.dataTransfer.setData("song", moveStartIndex);
         event.target.className += " is-dragging";
@@ -20,10 +23,16 @@ function SongCard(props) {
     }
 
     let handleDragEnd = (event) => {
+        if(!event.target.classList.contains("list-card"))
+            event.target = event.target.parentNode;
+
         event.target.className = "list-card unselected-list-card";
     }
 
     let handleDrop = (event) => {
+        if(!event.target.classList.contains("list-card"))
+            event.target = event.target.parentNode;
+
         let moveStartIndex = event.dataTransfer.getData("song");
         let moveEndIndex = event.target.id.substring("song-".length, event.target.id.length - "-card".length);
         if(moveStartIndex !== moveEndIndex)

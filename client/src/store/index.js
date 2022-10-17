@@ -510,7 +510,7 @@ export const useGlobalStore = () => {
     function KeyPress(event) {
         if(event.ctrlKey && !store.modalOpen)
         {
-            if(event.key === "z" && store.canUndo) {
+            if(event.key === 'z' && store.canUndo) {
                 store.undo();
             }
             else if(event.key === 'y' && store.canRedo) {

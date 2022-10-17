@@ -104,13 +104,7 @@ body {
   opacity: 100%;
 }
 
-.playlister-button:hover {
-  cursor: pointer;
-  color:black;
-}
-
-input:disabled,
-input[disabled]{
+input:disabled {
   opacity: 0.25; 
   cursor: not-allowed;
 }
